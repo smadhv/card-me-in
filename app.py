@@ -75,35 +75,44 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
-@app.route('/')
-def show_home():
-	db = get_db()
-	cur = 
+# @app.route('/')
+# def show_home():
+# 	db = get_db()
+# 	cur = 
 
-@app.route('/user/create_account/<int: user_id', methods=[POST])
-def create_account():
+@app.route('/user/create_account/<int: user_id>', methods=[POST])
+def create_account(name, username, password, venmo, phone_number):
 	db = get_db()
-    cur = db.execute('insert into users (?, ?, ?, ?, 5)')
+	usernames = db.execute('select username from users')# if username in users:
+	cur = db.execute('insert into users (?, ?, ?, ?, ?)', [name, username, password, venmo, phone_number])
     entries = cur.fetchall()
     return 'success'
 
 @app.route('/user/<int: user_id>', methods=[GET])
 def get_user_info(user_id):
 	db = get_db()
-	cur = db.execute('select username, venmo, phone_number, rating from users where user_id = user_id')
+	cur = db.execute('select username, venmo, phone_number, rating, number_of_ratings from users where user_id = ?', [user_id])
 	return 'success'
 
 @app.route('/user/<int: user_id>', methods=[PATCH])
 def update_rating(user_id, new_rating):
 	db = get_db()
-	old_rating = db.execute('select rating from users where user_id = user_id')
-	number_of_ratings = db.execute('select number_of_ratings from users where user_id = user_id') + 1
+	old_rating = db.execute('select rating from users where user_id = ?', [user_id])
+	number_of_ratings = db.execute('select number_of_ratings from users where user_id = ?', [user_id]) + 1
 	updated = (old_rating + new_rating)/number_of_ratings
-	cur = db.execute('update users set rating = updated, number_of_ratings += 1 where user_id = user_id')
+	cur = db.execute('update users set rating = ?, number_of_ratings = ? where user_id = ?', [updated, number_of_ratings, user_id])
 	return 'success'
 
 @app.route('/user/<int: user_id>', methods=[PATCH])
-def update_user_name(user_id, new_user_name):
-	
+def update_username(user_id, new_username):
+	db = get_db()
+	cur = db.execute('update users set username = ? where user_id = ?', [new_username, user_id])
+	return 'success'
+
+@app.route('/user/<int: user_id>', methods=[PATCH])
+def update_venmo(user_id, new_venmo):
+	db = get_db()
+	cur = db.execute('update users set venmo = ? where user_id = ?', [new_venmo, user_id])
+	return 'success'
 
 
