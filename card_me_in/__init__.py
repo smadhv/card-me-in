@@ -1,1 +1,1 @@
-from .card-me-in import app
+from .card_me_in import app
