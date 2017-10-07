@@ -82,10 +82,10 @@ def close_db(error):
 
 @app.route('/user/create_account/<int: user_id>', methods=[POST])
 def create_account(name, username, password, venmo, phone_number):
-	db = get_db()
-	usernames = db.execute('select username from users')# if username in users:
-	cur = db.execute('insert into users (?, ?, ?, ?, ?)', [name, username, password, venmo, phone_number])
-    entries = cur.fetchall()
+    db = get_db()
+    usernames = db.execute('select username from users')# if username in users:
+    # cur = db.execute('insert into users (?, ?, ?, ?, ?)', [name, username, password, venmo, phone_number])
+    # entries = cur.fetchall()
     return 'success'
 
 @app.route('/user/<int: user_id>', methods=[GET])
