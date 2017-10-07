@@ -113,7 +113,7 @@ def get_listings():
     db = get_db()
     cur = db.execute('select user_id, meal_time, place, cost, status from listings order by listing_id desc')
     entries = cur.fetchall()
-    return 'success'
+    return render_template('show_listings.html', error=None)
 
 
 @app.route('/listings/<int:listing_id>', methods=['GET'])
@@ -173,8 +173,11 @@ def get_listings_specific():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    db = get_db()
-    query = query_db('select username, password from users')
+    try:
+        query = query_db('select username, password from users')
+    except:
+        error = "You don't have an account."
+        return render_template('login.html', error=error)
     usernames = [(i['username'], i['password']) for i in query]
     error = None
     if request.method == 'POST':
@@ -186,7 +189,7 @@ def login():
         else:
             session['logged_in'] = True
             flash('You were logged in')
-            return redirect(url_for('show_entries'))
+            return redirect(url_for('show_home'))
     return render_template('login.html', error=error)
 
 
@@ -194,4 +197,4 @@ def login():
 def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('show_home'))
