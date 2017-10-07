@@ -1,30 +1,3 @@
-# from flask import Flask
-# from flask_restful import Resource, Api
-
-# app = Flask(__name__)
-# api = Api(app)
-
-# class User(Resource):
-
-# 	def __init__(self, username, password, venmo, phone, rating, listings):
-# 		self.username = username
-# 		self.password = password
-# 		self.venmo_id = venmo
-# 		self.phone_number = phone
-# 		self.rating = rating
-# 		self.listings = listings #list of listings
-
-# 	def post(self):
-
-#     def get(self):
-#         return {"hello": "world"}
-
-# api.add_resource(HelloWorld, '/')
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
-
-
 import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
@@ -83,8 +56,8 @@ def close_db(error):
 def create_account(name, username, password, venmo, phone_number):
     db = get_db()
     error = None
-    usernames = db.execute('select username from users')
-    if username in users:
+    usernames = db.execute('select username from users')[0]
+    if username in usernames:
     	error = 'username already exists. choose a new username.'
     cur = db.execute('insert into users (?, ?, ?, ?, ?)', [name, username, password, venmo, phone_number])
     entries = cur.fetchall()
@@ -94,27 +67,31 @@ def create_account(name, username, password, venmo, phone_number):
 def get_user_info(user_id):
 	db = get_db()
 	cur = db.execute('select username, venmo, phone_number, rating, number_of_ratings from users where user_id = ?', [user_id])
+	entries = cur.fetchall()
 	return 'success'
 
 @app.route('/user/<int: user_id>', methods=['PATCH'])
 def update_rating(user_id, new_rating):
 	db = get_db()
-	old_rating = db.execute('select rating from users where user_id = ?', [user_id])
-	number_of_ratings = db.execute('select number_of_ratings from users where user_id = ?', [user_id]) + 1
+	old_rating = db.execute('select rating from users where user_id = ?', [user_id])[0]
+	number_of_ratings = db.execute('select number_of_ratings from users where user_id = ?', [user_id])[0] + 1
 	updated = (old_rating + new_rating)/number_of_ratings
 	cur = db.execute('update users set rating = ?, number_of_ratings = ? where user_id = ?', [updated, number_of_ratings, user_id])
+	entries = cur.fetchall()
 	return 'success'
 
 @app.route('/user/<int: user_id>', methods=['PATCH'])
 def update_username(user_id, new_username):
 	db = get_db()
 	cur = db.execute('update users set username = ? where user_id = ?', [new_username, user_id])
+	entries = cur.fetchall()
 	return 'success'
 
 @app.route('/user/<int: user_id>', methods=['PATCH'])
 def update_venmo(user_id, new_venmo):
 	db = get_db()
 	cur = db.execute('update users set venmo = ? where user_id = ?', [new_venmo, user_id])
+	entries = cur.fetchall()
 	return 'success'
 
 
