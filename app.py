@@ -5,14 +5,14 @@ app = Flask(__name__)
 api = Api(app)
 
 class User(Resource):
-	username = ''
-	password = ''
-	venmo_id = ''
-	phone_number = 0
-	rating = 5
-	listings = []
 
-	def __init__():
+	def __init__(self, username, password, venmo, phone, rating, listings):
+		self.username = username
+		self.password = password
+		self.venmo_id = venmo
+		self.phone_number = phone
+		self.rating = rating
+		self.listings = listings #list of listings
 
 	def post(self):
 
