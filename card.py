@@ -1,10 +1,10 @@
 import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+    render_template, flash
 
-app = Flask(__name__) # create the application instance :)
-app.config.from_object(__name__) # load config from this file , flaskr.py
+app = Flask(__name__)  # create the application instance :)
+app.config.from_object(__name__)  # load config from this file , flaskr.py
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
@@ -15,11 +15,13 @@ app.config.update(dict(
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
+
 def connect_db():
     """Connects to the specific database."""
     rv = sqlite3.connect(app.config['DATABASE'])
     rv.row_factory = sqlite3.Row
     return rv
+
 
 def init_db():
     db = get_db()
@@ -27,11 +29,13 @@ def init_db():
         db.cursor().executescript(f.read())
     db.commit()
 
+
 @app.cli.command('initdb')
 def initdb_command():
     """Initializes the database."""
     init_db()
     print('Initialized the database.')
+
 
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -41,11 +45,20 @@ def get_db():
         g.sqlite_db = connect_db()
     return g.sqlite_db
 
+
 @app.teardown_appcontext
 def close_db(error):
     """Closes the database again at the end of the request."""
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
+
+
+def query_db(query, args=(), one=False):
+    cur = get_db().execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
 
 # @app.route('/')
 # def show_home():
@@ -62,6 +75,7 @@ def create_account(name, username, password, venmo, phone_number):
     cur = db.execute('insert into users (?, ?, ?, ?, ?)', [name, username, password, venmo, phone_number])
     entries = cur.fetchall()
     return render_template('create_account.html', error=error)
+
 
 @app.route('/user/<int: user_id>', methods=['GET'])
 def get_user_info(user_id):
@@ -93,5 +107,3 @@ def update_venmo(user_id, new_venmo):
 	cur = db.execute('update users set venmo = ? where user_id = ?', [new_venmo, user_id])
 	entries = cur.fetchall()
 	return 'success'
-
-

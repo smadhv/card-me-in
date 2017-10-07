@@ -1,6 +1,7 @@
-import app.py
+import app
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -18,6 +19,7 @@ def login():
             flash('You were logged in')
             return redirect(url_for('show_entries'))
     return render_template('login.html', error=error)
+
 
 @app.route('/logout')
 def logout():
