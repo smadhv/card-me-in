@@ -63,9 +63,9 @@ def query_db(query, args=(), one=False):
 @app.route('/')
 def show_home():
 	db = get_db()
-	return render_template('layout.html', error=None)
+	return render_template('login.html', error=None)
 
-@app.route('/user/<user_id>', methods=['POST'])
+@app.route('/user/<int:user_id>', methods=['POST'])
 def create_account(name, username, password, venmo, phone_number):
     db = get_db()
     error = None
@@ -76,15 +76,14 @@ def create_account(name, username, password, venmo, phone_number):
     entries = cur.fetchall()
     return render_template('create_account.html', error=error)
 
-
-@app.route('/user/<user_id>', methods=['GET'])
+@app.route('/user/<int:user_id>', methods=['GET'])
 def get_user_info(user_id):
 	db = get_db()
 	cur = db.execute('select username, venmo, phone_number, rating, number_of_ratings from users where user_id = ?', [user_id])
 	entries = cur.fetchall()
 	return render_template('settings.html', error=error)
 
-@app.route('/user/<user_id>', methods=['PATCH'])
+@app.route('/user/<int:user_id>', methods=['PATCH'])
 def update_rating(user_id, new_rating):
 	db = get_db()
 	old_rating = db.execute('select rating from users where user_id = ?', [user_id])
@@ -94,19 +93,20 @@ def update_rating(user_id, new_rating):
 	entries = cur.fetchall()
 	return 'success'
 
-@app.route('/user/<user_id>', methods=['PATCH'])
+@app.route('/user/<int:user_id>', methods=['PATCH'])
 def update_username(user_id, new_username):
 	db = get_db()
 	cur = db.execute('update users set username = ? where user_id = ?', [new_username, user_id])
 	entries = cur.fetchall()
 	return 'success'
 
-@app.route('/user/<user_id>', methods=['PATCH'])
+@app.route('/user/<int:user_id>', methods=['PATCH'])
 def update_venmo(user_id, new_venmo):
 	db = get_db()
 	cur = db.execute('update users set venmo = ? where user_id = ?', [new_venmo, user_id])
 	entries = cur.fetchall()
 	return 'success'
+
 
 @app.route('/listings', methods=['GET'])
 def get_listings():
@@ -116,7 +116,7 @@ def get_listings():
     return 'success'
 
 
-@app.route('/listings/<listing_id>', methods=['GET'])
+@app.route('/listings/<int:listing_id>', methods=['GET'])
 def get_one_listing(listing_id):
     db = get_db()
     cur = db.execute('select user_id, meal_time, place, cost, status from listings where listing_id = ?', [listing_id])
@@ -142,7 +142,7 @@ def delete_listing(listing_id):
     return 'success'
 
 
-@app.route('/listings/<listing_id>', methods=['PATCH'])
+@app.route('/listings/<int:listing_id>', methods=['PATCH'])
 def update_listing_status(listing_id, new_status):
     db = get_db()
     cur = db.execute('update listings set status = ? where listing_id = ?', [new_status, listing_id])
@@ -161,7 +161,7 @@ def get_listings_user(user_id):
     return 'success'
 
 
-@app.route('/listings/<place>', methods=['GET'])
+@app.route('/listings/<int:place>', methods=['GET'])
 def get_listings_specific():
     db = get_db()
     cur = db.execute(
@@ -170,8 +170,10 @@ def get_listings_specific():
     entries = cur.fetchall()
     return 'success'
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    db = get_db()
     query = query_db('select username, password from users')
     usernames = [(i['username'], i['password']) for i in query]
     error = None

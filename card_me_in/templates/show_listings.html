@@ -1,0 +1,7 @@
+<ul class=listings>
+  {% for entry in listings %}
+    <li><h2>{{ entry.user_id }}</h2>{{ entry.place|safe }}
+  {% else %}
+    <li><em>Unbelievable.  No listings here so far</em>
+  {% endfor %}
+  </ul>
