@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(
-    name='flaskr',
-    packages=['flaskr'],
+    name='card-me-in',
+    packages=['card-me-in'],
     include_package_data=True,
     install_requires=[
         'flask',

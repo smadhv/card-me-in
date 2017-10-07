@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import app
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 
@@ -69,7 +70,7 @@ def query_db(query, args=(), one=False):
 def create_account(name, username, password, venmo, phone_number):
     db = get_db()
     error = None
-    usernames = db.execute('select username from users')[0]
+    usernames = db.execute('select username from users')
     if username in usernames:
     	error = 'username already exists. choose a new username.'
     cur = db.execute('insert into users (?, ?, ?, ?, ?)', [name, username, password, venmo, phone_number])
@@ -82,12 +83,12 @@ def get_user_info(user_id):
 	db = get_db()
 	cur = db.execute('select username, venmo, phone_number, rating, number_of_ratings from users where user_id = ?', [user_id])
 	entries = cur.fetchall()
-	return 'success'
+	return render_template('settings.html', error=error)
 
 @app.route('/user/<int: user_id>', methods=['PATCH'])
 def update_rating(user_id, new_rating):
 	db = get_db()
-	old_rating = db.execute('select rating from users where user_id = ?', [user_id])[0]
+	old_rating = db.execute('select rating from users where user_id = ?', [user_id])
 	number_of_ratings = db.execute('select number_of_ratings from users where user_id = ?', [user_id])[0] + 1
 	updated = (old_rating + new_rating)/number_of_ratings
 	cur = db.execute('update users set rating = ?, number_of_ratings = ? where user_id = ?', [updated, number_of_ratings, user_id])
