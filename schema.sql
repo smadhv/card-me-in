@@ -11,7 +11,9 @@ create table users (
 
 drop table if exists listings;
 create table listings (
-	user_id integer not null;
-
-
+	listing_id integer primary key autoincrement,
+	user_id integer not null,
+	time integer not null,
+	place text not null,
+	cost decimal not null
 );
