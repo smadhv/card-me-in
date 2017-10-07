@@ -11,7 +11,9 @@ drop table if exists listings;
 create table listings (
 	listing_id integer primary key autoincrement,
 	user_id integer not null,
-	time integer not null,
+	meal_time integer not null,
 	place text not null,
-	cost decimal not null
+	cost decimal not null,
+	status text not null,
+	user2_id integer not null
 );
