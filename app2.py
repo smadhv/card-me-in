@@ -8,3 +8,10 @@ class Listing(Resource):
 		self.status = status
 
 	def post(self):
+
+	def get(self):
+
+listings = []
+@app.route('/listings', methods = ['GET'])
+def get_listings():
+
