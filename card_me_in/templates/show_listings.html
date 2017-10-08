@@ -1,7 +1,16 @@
-<ul class=listings>
-  {% for entry in listings %}
-    <li><h2>{{ entry.user_id }}</h2>{{ entry.place|safe }}
-  {% else %}
-    <li><em>Unbelievable.  No listings here so far</em>
-  {% endfor %}
-  </ul>
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Listings</h2>
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('get_listings') }}" method=get>
+    
+      <ul class=listings>
+      {% for entry in listings %}
+        <li><h2>{{ entry.user_id }}</h2>{{ entry.place }}
+      {% else %}
+        <li><em>Unbelievable.  No listings here so far</em>
+      {% endfor %}
+      </ul>
+  </form>
+
+{% endblock %}

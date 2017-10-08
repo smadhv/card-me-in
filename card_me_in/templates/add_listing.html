@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Add a Listing</h2>
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  	{% if session.logged_in %}
+    <form action="{{ url_for('add_listing') }}" method=post>
+    <dl>
+      <dt>user_id:
+      <dd><input type=integer name=user>
+      <dt>Meal Time:
+      <dd><input type=integer name=meal_time>
+      <dt>Place:
+      <dd><input type=text name=place>
+      <dt>Cost:
+      <dd><input type=decimal name=cost>
+      <dd><input type=submit value='Create Listing'>
+    </dl>
+  </form>
+  {% endif %}
+  <h2>Listings</h2>
+  <ul class=listings>
+  {% for entry in listings %}
+    <li><h2>{{ entry.user_id }}</h2>{{ entry.place }}
+  {% else %}
+    <li><em>Unbelievable.  No listings here so far</em>
+  {% endfor %}
+  </ul>
+{% endblock %}

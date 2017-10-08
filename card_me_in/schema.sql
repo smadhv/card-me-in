@@ -6,8 +6,8 @@ create table users (
   password text not null,
   venmo text not null,
   phone_number integer not null,
-  rating integer 5,
-  number_of_ratings integer 0,
+  rating integer,
+  number_of_ratings integer
 );
 
 drop table if exists listings;
