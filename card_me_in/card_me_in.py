@@ -139,13 +139,13 @@ def add_listing():
 #     return 'success'
 
 
-# @app.route('/listings/<int:listing_id>', methods=['PATCH'])
-# def update_listing_status(listing_id, new_status):
-#     db = get_db()
-#     cur = db.execute('update listings set status = ? where listing_id = ?', [new_status, listing_id])
-#     db.commit()
-#     flash('Listing was successfully modified')
-#     return 'success'
+@app.route('/listings/<int:listing_id>', methods=['PATCH'])
+def update_listing_status():
+    db = get_db()
+    cur = db.execute('update listings set status = ? where listing_id = ?', ['not available', listing_id])
+    db.commit()
+    flash('Listing was successfully modified')
+    return 'success'
 
 
 # @app.route('/listings', methods=['GET'])
@@ -182,7 +182,7 @@ def login():
     if request.method == 'POST':
         if request.form['username'] in usernames:
             session['logged_in'] = True
-            flash("youw ere logged in")
+            flash("You were logged in")
             return redirect(url_for('add_listing'))
         else:
             print("log in failed")
