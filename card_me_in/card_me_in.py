@@ -110,6 +110,9 @@ def get_listings():
     db = get_db()
     cur = db.execute('select user_id, meal_time, place, cost, status from listings order by listing_id desc')
     entries = cur.fetchall()
+    x = query_db('select * from listings')
+    for i in x:
+        print(i['listing_id'])
     return render_template('add_listing.html', listings=entries)
 
 

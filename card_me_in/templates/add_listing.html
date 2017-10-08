@@ -20,7 +20,7 @@
   <h2>Listings</h2>
   <ul class=listings>
   {% for entry in listings %}
-    <li><h2>User ID: {{ entry.user_id }}</h2>Meal Time: {{ entry.meal_time }} Place: {{ entry.place }} Cost: {{ entry.cost }} Status: {{ entry.status }}
+    <li><h2>User ID: {{ entry.user_id }}</h2>Meal Time: {{ entry.meal_time }} Place: {{ entry.place }} Cost: {{ entry.cost }} Status: {{ entry.status }} ID: {{ entry.listing_id }}
   {% else %}
     <li><em>Unbelievable.  No listings here so far</em>
   {% endfor %}
