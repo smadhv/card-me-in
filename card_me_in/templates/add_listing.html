@@ -5,7 +5,7 @@
   	{% if session.logged_in %}
     <form action="{{ url_for('add_listing') }}" method=post>
     <dl>
-      <dt>user_id:
+      <dt>User ID:
       <dd><input type=integer name=user>
       <dt>Meal Time:
       <dd><input type=integer name=meal_time>
@@ -20,7 +20,7 @@
   <h2>Listings</h2>
   <ul class=listings>
   {% for entry in listings %}
-    <li><h2>{{ entry.user_id }}</h2>{{ entry.place }}
+    <li><h2>User ID: {{ entry.user_id }}</h2>Meal Time: {{ entry.meal_time }} Place: {{ entry.place }} Cost: {{ entry.cost }} Status: {{ entry.status }}
   {% else %}
     <li><em>Unbelievable.  No listings here so far</em>
   {% endfor %}

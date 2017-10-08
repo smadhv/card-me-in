@@ -67,18 +67,19 @@ def show_home():
     db = get_db()
     return render_template('create_account.html', error=None)
 
+# @app.route('/rene')
+# def print():
+#     db = get_db()
+#     print(query_db('select username from users'))
+
 @app.route('/user/create_account', methods=['POST'])
 def create_account():
     db = get_db()
     # usernames = db.execute('select username from users')
     # if username in usernames:
     # 	error = 'username already exists. choose a new username.'
-    print(request.form)
-    # for user in query_db("select * from users"):
-    #     print(user)
     args = [request.form['name'], request.form['username'], 
         request.form['password'], request.form['venmo'], request.form['phone_number']]
-    print(args)
     cur = db.execute('insert into users (name, username, password, venmo, phone_number) values (?, ?, ?, ?, ?)', args)
     # entries = cur.fetchall()
     db.commit()
@@ -86,15 +87,15 @@ def create_account():
     # print(entries)
     return render_template('create_account.html')
 
-@app.route('/users', methods=['GET'])
-def get_users():
-    one = False
-    db = get_db()
-    cur = db.execute('select username from users')
-    rv = cur.fetchall()
-    cur.close()
-    # print((rv[0] if rv else None) if one else rv)
-    return (rv[0] if rv else None) if one else rv
+# @app.route('/users', methods=['GET'])
+# def get_users():
+#     one = False
+#     db = get_db()
+#     cur = db.execute('select username from users')
+#     rv = cur.fetchall()
+#     cur.close()
+#     # print((rv[0] if rv else None) if one else rv)
+#     return (rv[0] if rv else None) if one else rv
 
 # @app.route('/user/<int:user_id>', methods=['GET'])
 # def get_user_info(user_id):
@@ -109,7 +110,7 @@ def get_listings():
     db = get_db()
     cur = db.execute('select user_id, meal_time, place, cost, status from listings order by listing_id desc')
     entries = cur.fetchall()
-    return render_template('add_listing.html', error=None)
+    return render_template('add_listing.html', listings=entries)
 
 
 # @app.route('/listings/<int:listing_id>', methods=['GET'])
@@ -126,9 +127,8 @@ def add_listing():
     cur = db.execute('insert into listings (user_id, meal_time, place, cost, status, user2_id) values (?, ?, ?, ?, ?, ?)',
                [request.form['user'], request.form['meal_time'], request.form['place'], request.form['cost'], 'available', 1])
     db.commit()
-    cur.close()
     flash('New listing was successfully posted')
-    return render_template('add_listing.html')
+    return redirect(url_for('get_listings'))
 
 
 # @app.route('/listings', methods=['DELETE'])
