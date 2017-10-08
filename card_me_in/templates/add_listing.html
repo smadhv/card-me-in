@@ -25,12 +25,12 @@
     	<p>Meal Time: {{ entry.meal_time }}</p>
     	<p>Place: {{ entry.place }}</p>
     	<p>Cost: {{ entry.cost }}</p>
-    	<p>Status: {{ entry.status }}</p>
-    	<p>ID: {{ entry.listing_id }}</p></li>
-
+    	<p>ID: {{ entry.listing_id|safe }}</p></li>
   </div>
   {% else %}
+  <div class=entry>
     <li><em>Unbelievable.  No listings here so far</em></li>
+  </div>
   {% endfor %}
   </ul>
 {% endblock %}

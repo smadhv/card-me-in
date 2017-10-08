@@ -4,6 +4,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 from flask import jsonify
 
+username_logged_in = ''
 app = Flask(__name__)  # create the application instance :)
 app.config.from_object(__name__)  # load config from this file , flaskr.py
 
@@ -97,12 +98,12 @@ def create_account():
 #     # print((rv[0] if rv else None) if one else rv)
 #     return (rv[0] if rv else None) if one else rv
 
-# @app.route('/user/<int:user_id>', methods=['GET'])
-# def get_user_info(user_id):
-# 	db = get_db()
-# 	cur = db.execute('select username, venmo, phone_number, rating, number_of_ratings from users where user_id = ?', [user_id])
-# 	entries = cur.fetchall()
-# 	return jsonify(entries)
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_user_info(user_id):
+	db = get_db()
+	cur = db.execute('select username, venmo, phone_number, rating, number_of_ratings from users where user_id = ?', [user_id])
+	entries = cur.fetchall()
+	return jsonify(list(entries[0]))
 
 
 @app.route('/listings', methods=['GET'])
@@ -124,8 +125,9 @@ def get_listings():
 @app.route('/listings', methods=['POST'])
 def add_listing():
     db = get_db()
+    user_id = query_db('select user_id from users where username = ?', [username_logged_in], one=True)
     cur = db.execute('insert into listings (user_id, meal_time, place, cost, status, user2_id) values (?, ?, ?, ?, ?, ?)',
-               [request.form['user'], request.form['meal_time'], request.form['place'], request.form['cost'], 'available', 1])
+               [user_id['user_id'], request.form['meal_time'], request.form['place'], request.form['cost'], 'available', 1])
     db.commit()
     flash('New listing was successfully posted')
     return redirect(url_for('get_listings'))
@@ -180,6 +182,7 @@ def login():
     print(usernames)
     error = None
     if request.method == 'POST':
+        username_logged_in = request.form['username']
         if request.form['username'] in usernames:
             session['logged_in'] = True
             flash("You were logged in")
